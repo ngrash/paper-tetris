@@ -350,43 +350,16 @@ namespace Tetris
             }
 
             // Draw the score
-            string strScore = _score.ToString(CultureInfo.InvariantCulture);
             var scoreNumberPosition = new Vector2f(GridOffsetLeft + (GridWidth * BlockWidth) + (BlockWidth * 2), BlockHeigth * 2);
-            foreach (char scoreChar in strScore)
-            {
-                int code = int.Parse(scoreChar.ToString(CultureInfo.InvariantCulture));
-                Sprite numberSprite = _numberSprites[code];
-                numberSprite.Position = scoreNumberPosition;
-                _window.Draw(numberSprite);
-
-                scoreNumberPosition += new Vector2f(BlockWidth, 0);
-            }
+            DrawNumber(_score, scoreNumberPosition);
 
             // Draw the level
-            string strLevel = _level.ToString(CultureInfo.InvariantCulture);
             var levelNumberPosition = new Vector2f(GridOffsetLeft + (GridWidth * BlockWidth) + (BlockWidth * 2), BlockHeigth * 5);
-            foreach (char levelChar in strLevel)
-            {
-                int code = int.Parse(levelChar.ToString(CultureInfo.InvariantCulture));
-                Sprite numberSprite = _numberSprites[code];
-                numberSprite.Position = levelNumberPosition;
-                _window.Draw(numberSprite);
-
-                levelNumberPosition += new Vector2f(BlockWidth, 0);
-            }
+            DrawNumber(_level, levelNumberPosition);
 
             // Draw the line counter
-            string strLines = _lines.ToString(CultureInfo.InvariantCulture);
             var lineNumberPosition = new Vector2f(GridOffsetLeft + (GridWidth * BlockWidth) + (BlockWidth * 2), BlockHeigth * 8);
-            foreach (char lineChar in strLines)
-            {
-                int code = int.Parse(lineChar.ToString(CultureInfo.InvariantCulture));
-                Sprite numberSprite = _numberSprites[code];
-                numberSprite.Position = lineNumberPosition;
-                _window.Draw(numberSprite);
-
-                lineNumberPosition += new Vector2f(BlockWidth, 0);
-            }
+            DrawNumber(_lines, lineNumberPosition);
 
             // Draw the next tetromino
             for (int x = 0; x < _nextTetromino.Width; x++)
@@ -431,6 +404,19 @@ namespace Tetris
             }
 
             _window.Display();
+        }
+
+        private void DrawNumber(int num, Vector2f position)
+        {
+            foreach (char scoreChar in num.ToString(CultureInfo.InvariantCulture))
+            {
+                int code = int.Parse(scoreChar.ToString(CultureInfo.InvariantCulture));
+                Sprite numberSprite = _numberSprites[code];
+                numberSprite.Position = position;
+                _window.Draw(numberSprite);
+
+                position += new Vector2f(BlockWidth, 0);
+            }
         }
     }
 }
