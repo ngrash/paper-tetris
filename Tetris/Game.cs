@@ -20,6 +20,8 @@ namespace Tetris
         private readonly RenderWindow _window;
         private readonly Grid<int> _grid;
 
+        private readonly Sprite[] _blockSprites;
+
         private Tetromino _tetromino;
 
         private float _secondsSinceMoveDown;
@@ -41,6 +43,18 @@ namespace Tetris
 
             _tetromino = Tetromino.NewRandom();
             _tetromino.PotentialTopLeft = new Vector2i(3, 0);
+
+            _blockSprites = new[]
+                {
+                    new Sprite(new Texture("Assets/Box_32x32.png")),
+                    new Sprite(new Texture("Assets/I_32x32.png")),
+                    new Sprite(new Texture("Assets/J_32x32.png")), 
+                    new Sprite(new Texture("Assets/L_32x32.png")), 
+                    new Sprite(new Texture("Assets/O_32x32.png")), 
+                    new Sprite(new Texture("Assets/S_32x32.png")), 
+                    new Sprite(new Texture("Assets/T_32x32.png")), 
+                    new Sprite(new Texture("Assets/Z_32x32.png")) 
+                };
         }
 
         public void Run()
@@ -235,24 +249,10 @@ namespace Tetris
             {
                 for (int y = 0; y < GridHeight; y++)
                 {
-                    if (_grid[x, y] == 0)
-                    {
-                        _window.Draw(
-                            new RectangleShape(new Vector2f(BlockWidth, BlockHeigth))
-                                {
-                                    FillColor = (x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1) ? new Color(10, 10, 10) : new Color(30, 30, 30),
-                                    Position = new Vector2f(x * BlockWidth, y * BlockHeigth)
-                                });
-                    }
-                    else
-                    {
-                        _window.Draw(
-                            new RectangleShape(new Vector2f(BlockWidth, BlockHeigth))
-                                {
-                                    FillColor = new Color(200, 30, 30),
-                                    Position = new Vector2f(x * BlockWidth, y * BlockHeigth)
-                                });
-                    }
+                    Sprite blockSprite = _blockSprites[_grid[x, y]];
+                    blockSprite.Position = new Vector2f(x * BlockWidth, y * BlockHeigth);
+
+                    _window.Draw(blockSprite);
                 }
             }
 
@@ -260,17 +260,14 @@ namespace Tetris
             {
                 for (int y = 0; y < _tetromino.Height; y++)
                 {
-                    if (_tetromino.Blocks[x, y] != 0)
+                    int code = _tetromino.Blocks[x, y];
+                    if (code != 0)
                     {
-                        _window.Draw(
-                            new RectangleShape(new Vector2f(BlockWidth, BlockHeigth))
-                                {
-                                    FillColor = new Color(200, 30, 30),
-                                    Position =
-                                        new Vector2f(
-                                            (_tetromino.TopLeft.X + x) * BlockWidth,
-                                            (_tetromino.TopLeft.Y + y) * BlockHeigth)
-                                });
+                        Sprite blockSprite = _blockSprites[code];
+                        blockSprite.Position = new Vector2f(
+                            (_tetromino.TopLeft.X + x) * BlockWidth, (_tetromino.TopLeft.Y + y) * BlockHeigth);
+
+                        _window.Draw(blockSprite);
                     }
                 }
             }

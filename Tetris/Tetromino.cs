@@ -8,69 +8,71 @@ namespace Tetris
     {
         #region Tetrominos
 
-        #region O
+        #region I
 
-        private static readonly Tetromino O = new Tetromino
-            {
-                Rotations =
-                    new[]
+        private static readonly Tetromino I = new Tetromino
+        {
+            Rotations =
+            new[]
+                    {
+                        new Grid<int>(new[,] 
                         {
-                            new Grid<int>(new[,]
-                                {
-                                    { 1, 1 },
-                                    { 1, 1 }
-                                }), 
-                            new Grid<int>(new[,]
-                                {
-                                    { 1, 1 }, 
-                                    { 1, 1 }
-                                }),
-                            new Grid<int>(new[,]
-                                {
-                                    { 1, 1 },
-                                    { 1, 1 }
-                                }), 
-                            new Grid<int>(new[,]
-                                {
-                                    { 1, 1 }, 
-                                    { 1, 1 }
-                                })
-                        }
-            };
+                            { 1 },
+                            { 1 },
+                            { 1 },
+                            { 1 }
+                        }),
+                        new Grid<int>(new[,]
+                            {
+                              { 1, 1, 1, 1 }
+                            }),
+                        new Grid<int>(new[,] 
+                        {
+                            { 1 },
+                            { 1 },
+                            { 1 },
+                            { 1 }
+                        }),
+                        new Grid<int>(new[,]
+                            {
+                              { 1, 1, 1, 1 }
+                            })
+                    }
+        };
 
         #endregion
 
         #region J
 
         private static readonly Tetromino J = new Tetromino
-            {
-                Rotations =
-                new[]
+        {
+            Rotations =
+            new[]
                     {
                         new Grid<int>(new[,] 
                         {
-                            { 0, 1 },
-                            { 0, 1 },
-                            { 1, 1 }
+                            { 0, 2 },
+                            { 0, 2 },
+                            { 2, 2 }
                         }),
                         new Grid<int>(new[,]
                             {
-                              { 1, 0, 0 },
-                              { 1, 1, 1 }
+                              { 2, 0, 0 },
+                              { 2, 2, 2 }
                             }),
                         new Grid<int>(new[,] 
                         {
-                            { 1, 1 },
-                            { 1, 0 },
-                            { 1, 0 }
+                            { 2, 2 },
+                            { 2, 0 },
+                            { 2, 0 }
                         }),
                         new Grid<int>(new[,]
                             {
-                              { 1, 1, 1 },
-                              { 0, 0, 1 }
+                              { 2, 2, 2 },
+                              { 0, 0, 2 }
                             })
                     }
-            };
+        };
 
         #endregion
 
@@ -83,61 +85,59 @@ namespace Tetris
                     {
                         new Grid<int>(new[,] 
                         {
-                            { 1, 0 },
-                            { 1, 0 },
-                            { 1, 1 }
+                            { 3, 0 },
+                            { 3, 0 },
+                            { 3, 3 }
                         }),
                         new Grid<int>(new[,]
                             {
-                              { 1, 1, 1 },
-                              { 1, 0, 0 }
+                              { 3, 3, 3 },
+                              { 3, 0, 0 }
                             }),
                         new Grid<int>(new[,] 
                         {
-                            { 1, 1 },
-                            { 0, 1 },
-                            { 0, 1 }
+                            { 3, 3 },
+                            { 0, 3 },
+                            { 0, 3 }
                         }),
                         new Grid<int>(new[,]
                             {
-                              { 0, 0, 1 },
-                              { 1, 1, 1 }
+                              { 0, 0, 3 },
+                              { 3, 3, 3 }
                             })
                     }
         };
 
         #endregion
 
-        #region I
+        #region O
 
-        private static readonly Tetromino I = new Tetromino
+        private static readonly Tetromino O = new Tetromino
             {
                 Rotations =
-                new[]
-                    {
-                        new Grid<int>(new[,] 
+                    new[]
                         {
-                            { 1 },
-                            { 1 },
-                            { 1 },
-                            { 1 }
-                        }),
-                        new Grid<int>(new[,]
-                            {
-                              { 1, 1, 1, 1 }
-                            }),
-                        new Grid<int>(new[,] 
-                        {
-                            { 1 },
-                            { 1 },
-                            { 1 },
-                            { 1 }
-                        }),
-                        new Grid<int>(new[,]
-                            {
-                              { 1, 1, 1, 1 }
-                            })
-                    }
+                            new Grid<int>(new[,]
+                                {
+                                    { 4, 4 },
+                                    { 4, 4 }
+                                }), 
+                            new Grid<int>(new[,]
+                                {
+                                    { 4, 4 }, 
+                                    { 4, 4 }
+                                }),
+                            new Grid<int>(new[,]
+                                {
+                                    { 4, 4 },
+                                    { 4, 4 }
+                                }), 
+                            new Grid<int>(new[,]
+                                {
+                                    { 4, 4 }, 
+                                    { 4, 4 }
+                                })
+                        }
             };
 
         #endregion
@@ -151,25 +151,25 @@ namespace Tetris
                     {
                         new Grid<int>(new[,] 
                         {
-                            { 0, 1, 1 },
-                            { 1, 1, 0 }
+                            { 0, 5, 5 },
+                            { 5, 5, 0 }
                         }),
                         new Grid<int>(new[,]
                             {
-                              { 1, 0 },
-                              { 1, 1 },
-                              { 0, 1 }
+                              { 5, 0 },
+                              { 5, 5 },
+                              { 0, 5 }
                             }),
                         new Grid<int>(new[,] 
                         {
-                            { 0, 1, 1 },
-                            { 1, 1, 0 }
+                            { 0, 5, 5 },
+                            { 5, 5, 0 }
                         }),
                         new Grid<int>(new[,]
                             {
-                              { 1, 0 },
-                              { 1, 1 },
-                              { 0, 1 }
+                              { 5, 0 },
+                              { 5, 5 },
+                              { 0, 5 }
                             })
                     }
         };
@@ -185,25 +185,25 @@ namespace Tetris
                     {
                         new Grid<int>(new[,] 
                         {
-                            { 0, 1, 0 },
-                            { 1, 1, 1 }
+                            { 0, 6, 0 },
+                            { 6, 6, 6 }
                         }),
                         new Grid<int>(new[,]
                             {
-                              { 1, 0 },
-                              { 1, 1 },
-                              { 1, 0 }
+                              { 6, 0 },
+                              { 6, 6 },
+                              { 6, 0 }
                             }),
                         new Grid<int>(new[,] 
                         {
-                            { 1, 1, 1 },
-                            { 0, 1, 0 }
+                            { 6, 6, 6 },
+                            { 0, 6, 0 }
                         }),
                         new Grid<int>(new[,]
                             {
-                              { 0, 1 },
-                              { 1, 1 },
-                              { 0, 1 }
+                              { 0, 6 },
+                              { 6, 6 },
+                              { 0, 6 }
                             })
                     }
         };
@@ -219,25 +219,25 @@ namespace Tetris
                     {
                         new Grid<int>(new[,] 
                         {
-                            { 1, 1, 0 },
-                            { 0, 1, 1 }
+                            { 7, 7, 0 },
+                            { 0, 7, 7 }
                         }),
                         new Grid<int>(new[,]
                             {
-                              { 0, 1 },
-                              { 1, 1 },
-                              { 1, 0 }
+                              { 0, 7 },
+                              { 7, 7 },
+                              { 7, 0 }
                             }),
                         new Grid<int>(new[,] 
                         {
-                            { 1, 1, 0 },
-                            { 0, 1, 1 }
+                            { 7, 7, 0 },
+                            { 0, 7, 7 }
                         }),
                         new Grid<int>(new[,]
                             {
-                              { 0, 1 },
-                              { 1, 1 },
-                              { 1, 0 }
+                              { 0, 7 },
+                              { 7, 7 },
+                              { 7, 0 }
                             })
                     }
         };
