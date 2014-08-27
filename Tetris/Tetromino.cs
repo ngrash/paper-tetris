@@ -364,6 +364,8 @@ namespace Tetris
             }
 
             Tetromino tetromino = New(prototype);
+            tetromino.TopLeft = new Vector2i(4, 0);
+            tetromino.PotentialTopLeft = tetromino.TopLeft;
             return tetromino;
         }
 
