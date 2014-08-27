@@ -363,7 +363,7 @@ namespace Tetris
                     throw new ArgumentOutOfRangeException();
             }
 
-            Tetromino tetromino = New(prototype);
+            Tetromino tetromino = NewRandomRotation(prototype);
             tetromino.TopLeft = new Vector2i(4, 0);
             tetromino.PotentialTopLeft = tetromino.TopLeft;
             return tetromino;
@@ -378,6 +378,7 @@ namespace Tetris
         {
             Tetromino tetromino = New(prototype);
             tetromino.Rotation = Random.Next(tetromino.Rotations.Length);
+            tetromino.PotentialRotation = tetromino.Rotation;
             return tetromino;
         }
 
