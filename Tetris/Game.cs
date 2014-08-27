@@ -361,6 +361,18 @@ namespace Tetris
             DrawText("LINES", controlPosition + new Vector2f(0, BlockHeigth * 7));
             DrawNumber(_lines, controlPosition + new Vector2f(0, BlockHeigth * 8));
 
+            // Draw a box that contains the next tetromino
+            for (int x = 0; x < 5; x++)
+            {
+                for (int y = 0; y < 5; y++)
+                {
+                    Sprite emptySprite = _blockSprites[0];
+                    emptySprite.Position = controlPosition + new Vector2f((BlockWidth * x), (BlockHeigth * 10) + (BlockHeigth * y));
+
+                    _window.Draw(emptySprite);
+                }
+            }
+
             // Draw the next tetromino
             for (int x = 0; x < _nextTetromino.Width; x++)
             {
@@ -408,7 +420,22 @@ namespace Tetris
 
         private void DrawNumber(int number, Vector2f position)
         {
-            foreach (char ch in number.ToString(CultureInfo.InvariantCulture))
+            const int FieldSize = 5;
+
+            string str = number.ToString(CultureInfo.InvariantCulture);
+            if (str.Length < FieldSize)
+            {
+                for (int i = 0; i < FieldSize - str.Length; i++)
+                {
+                    Sprite emptySprite = _blockSprites[0];
+                    emptySprite.Position = position;
+                    _window.Draw(emptySprite);
+
+                    position += new Vector2f(BlockWidth, 0);
+                }
+            }
+
+            foreach (char ch in str)
             {
                 int code = int.Parse(ch.ToString(CultureInfo.InvariantCulture));
                 Sprite numberSprite = _numberSprites[code];
