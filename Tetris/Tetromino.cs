@@ -363,7 +363,7 @@ namespace Tetris
                     throw new ArgumentOutOfRangeException();
             }
 
-            Tetromino tetromino = NewRandomRotation(prototype);
+            Tetromino tetromino = New(prototype);
             return tetromino;
         }
 

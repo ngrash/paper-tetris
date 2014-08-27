@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 
 using SFML.Graphics;
 using SFML.Window;
@@ -8,8 +10,11 @@ namespace Tetris
 {
     internal class Game
     {
-        private const int WindowWidth = GridWidth * BlockWidth;
-        private const int WindowHeight = GridHeight * BlockHeigth;
+        private const int WindowWidth = (GridWidth * BlockWidth) + GridOffsetLeft + (8 * BlockWidth);
+        private const int WindowHeight = (GridHeight * BlockHeigth) + GridOffsetTop;
+        
+        private const int GridOffsetLeft = BlockWidth * 2;
+        private const int GridOffsetTop = 0;
 
         private const int GridWidth = 10;
         private const int GridHeight = 16;
@@ -21,8 +26,16 @@ namespace Tetris
         private readonly Grid<int> _grid;
 
         private readonly Sprite[] _blockSprites;
+        private readonly Sprite[] _layoutSprites;
+        private readonly Sprite[] _numberSprites;
+        private readonly Dictionary<char,Sprite> _letterSprites;
 
         private Tetromino _tetromino;
+        private Tetromino _nextTetromino;
+
+        private int _level;
+        private int _score;
+        private int _lines;
 
         private float _secondsSinceMoveDown;
 
@@ -33,7 +46,7 @@ namespace Tetris
 
         public Game()
         {
-            _window = new RenderWindow(new VideoMode(WindowWidth, WindowHeight), "Tetris");
+            _window = new RenderWindow(new VideoMode(WindowWidth, WindowHeight), "бумага Тетрис");
             _window.Closed += (s, e) => _window.Close();
             _window.KeyPressed += WindowOnKeyPressed;
 
@@ -42,18 +55,51 @@ namespace Tetris
             _grid = new Grid<int>(GridWidth, GridHeight);
 
             _tetromino = Tetromino.NewRandom();
-            _tetromino.PotentialTopLeft = new Vector2i(3, 0);
+            _nextTetromino = Tetromino.NewRandom();
 
             _blockSprites = new[]
                 {
-                    new Sprite(new Texture("Assets/Box_32x32.png")),
-                    new Sprite(new Texture("Assets/I_32x32.png")),
-                    new Sprite(new Texture("Assets/J_32x32.png")), 
-                    new Sprite(new Texture("Assets/L_32x32.png")), 
-                    new Sprite(new Texture("Assets/O_32x32.png")), 
-                    new Sprite(new Texture("Assets/S_32x32.png")), 
-                    new Sprite(new Texture("Assets/T_32x32.png")), 
-                    new Sprite(new Texture("Assets/Z_32x32.png")) 
+                    new Sprite(new Texture("Assets/Blocks/Box_32x32.png")),
+                    new Sprite(new Texture("Assets/Blocks/I_32x32.png")),
+                    new Sprite(new Texture("Assets/Blocks/J_32x32.png")), 
+                    new Sprite(new Texture("Assets/Blocks/L_32x32.png")), 
+                    new Sprite(new Texture("Assets/Blocks/O_32x32.png")), 
+                    new Sprite(new Texture("Assets/Blocks/S_32x32.png")), 
+                    new Sprite(new Texture("Assets/Blocks/T_32x32.png")), 
+                    new Sprite(new Texture("Assets/Blocks/Z_32x32.png")) 
+                };
+
+            _numberSprites = new[]
+                {
+                    new Sprite(new Texture("Assets/Numbers/0_32x32.png")),
+                    new Sprite(new Texture("Assets/Numbers/1_32x32.png")),
+                    new Sprite(new Texture("Assets/Numbers/2_32x32.png")),
+                    new Sprite(new Texture("Assets/Numbers/3_32x32.png")),
+                    new Sprite(new Texture("Assets/Numbers/4_32x32.png")),
+                    new Sprite(new Texture("Assets/Numbers/5_32x32.png")),
+                    new Sprite(new Texture("Assets/Numbers/6_32x32.png")),
+                    new Sprite(new Texture("Assets/Numbers/7_32x32.png")),
+                    new Sprite(new Texture("Assets/Numbers/8_32x32.png")),
+                    new Sprite(new Texture("Assets/Numbers/9_32x32.png"))
+                };
+
+            _layoutSprites = new[]
+                {
+                    new Sprite(new Texture("Assets/Layout/Black_32x32.png")),
+                    new Sprite(new Texture("Assets/Layout/Bricks_32x32.png"))
+                };
+
+            _letterSprites = new Dictionary<char, Sprite>
+                {
+                    { 'S', new Sprite(new Texture("Assets/Letters/S_32x32.png")) },
+                    { 'C', new Sprite(new Texture("Assets/Letters/C_32x32.png")) },
+                    { 'O', new Sprite(new Texture("Assets/Letters/O_32x32.png")) },
+                    { 'R', new Sprite(new Texture("Assets/Letters/R_32x32.png")) },
+                    { 'E', new Sprite(new Texture("Assets/Letters/E_32x32.png")) },
+                    { 'L', new Sprite(new Texture("Assets/Letters/L_32x32.png")) },
+                    { 'I', new Sprite(new Texture("Assets/Letters/I_32x32.png")) },
+                    { 'N', new Sprite(new Texture("Assets/Letters/N_32x32.png")) },
+                    { 'V', new Sprite(new Texture("Assets/Letters/V_32x32.png")) },
                 };
         }
 
@@ -209,6 +255,7 @@ namespace Tetris
                 }
 
                 // Check for completed rows
+                int completedRowCount = 0;
                 for (int y = 0; y < GridHeight; y++)
                 {
                     bool rowIsComplete = true;
@@ -220,6 +267,8 @@ namespace Tetris
 
                     if (rowIsComplete)
                     {
+                        completedRowCount++;
+
                         Console.WriteLine("row completed: {0}", y);
 
                         // Move each row down
@@ -233,7 +282,38 @@ namespace Tetris
                     }
                 }
 
-                _tetromino = Tetromino.NewRandom();
+                if (completedRowCount > 0)
+                {
+                    _lines += completedRowCount;
+
+                    // Calculate score
+                    int pointFactor;
+                    switch (completedRowCount)
+                    {
+                        case 1:
+                            pointFactor = 40;
+                            break;
+                        case 2:
+                            pointFactor = 100;
+                            break;
+                        case 3:
+                            pointFactor = 300;
+                            break;
+                        case 4:
+                            pointFactor = 1200;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
+                    _score += pointFactor * (_level + 1);
+
+                    // Check level progression
+                    
+                }
+
+                _tetromino = _nextTetromino;
+                _nextTetromino = Tetromino.NewRandom();
             }
             else
             {
@@ -245,17 +325,95 @@ namespace Tetris
         {
             _window.Clear();
 
-            for (int x = 0; x < GridWidth; x++)
+            // Fill background with black layout block
+            for (int x = 0; x < WindowWidth / BlockWidth; x++)
             {
-                for (int y = 0; y < GridHeight; y++)
+                for (int y = 0; y < WindowHeight / BlockHeigth; y++)
                 {
-                    Sprite blockSprite = _blockSprites[_grid[x, y]];
-                    blockSprite.Position = new Vector2f(x * BlockWidth, y * BlockHeigth);
+                    Sprite layoutSprite = _layoutSprites[0];
+                    layoutSprite.Position = new Vector2f(x * BlockWidth, y * BlockHeigth);
+
+                    _window.Draw(layoutSprite);
+                }
+            }
+
+            // Draw two brick lines at the side of the grid
+            for (int y = 0; y < WindowHeight / BlockHeigth; y++)
+            {
+                Sprite brickSprite = _layoutSprites[1];
+
+                brickSprite.Position = new Vector2f(BlockWidth, y * BlockHeigth);
+                _window.Draw(brickSprite);
+
+                brickSprite.Position = new Vector2f(GridOffsetLeft + (GridWidth * BlockWidth), y * BlockHeigth);
+                _window.Draw(brickSprite);
+            }
+
+            // Draw the score
+            string strScore = _score.ToString(CultureInfo.InvariantCulture);
+            var scoreNumberPosition = new Vector2f(GridOffsetLeft + (GridWidth * BlockWidth) + (BlockWidth * 2), BlockHeigth * 2);
+            foreach (char scoreChar in strScore)
+            {
+                int code = int.Parse(scoreChar.ToString(CultureInfo.InvariantCulture));
+                Sprite numberSprite = _numberSprites[code];
+                numberSprite.Position = scoreNumberPosition;
+                _window.Draw(numberSprite);
+
+                scoreNumberPosition += new Vector2f(BlockWidth, 0);
+            }
+
+            // Draw the level
+            string strLevel = _level.ToString(CultureInfo.InvariantCulture);
+            var levelNumberPosition = new Vector2f(GridOffsetLeft + (GridWidth * BlockWidth) + (BlockWidth * 2), BlockHeigth * 5);
+            foreach (char levelChar in strLevel)
+            {
+                int code = int.Parse(levelChar.ToString(CultureInfo.InvariantCulture));
+                Sprite numberSprite = _numberSprites[code];
+                numberSprite.Position = levelNumberPosition;
+                _window.Draw(numberSprite);
+
+                levelNumberPosition += new Vector2f(BlockWidth, 0);
+            }
+
+            // Draw the line counter
+            string strLines = _lines.ToString(CultureInfo.InvariantCulture);
+            var lineNumberPosition = new Vector2f(GridOffsetLeft + (GridWidth * BlockWidth) + (BlockWidth * 2), BlockHeigth * 8);
+            foreach (char lineChar in strLines)
+            {
+                int code = int.Parse(lineChar.ToString(CultureInfo.InvariantCulture));
+                Sprite numberSprite = _numberSprites[code];
+                numberSprite.Position = lineNumberPosition;
+                _window.Draw(numberSprite);
+
+                lineNumberPosition += new Vector2f(BlockWidth, 0);
+            }
+
+            // Draw the next tetromino
+            for (int x = 0; x < _nextTetromino.Width; x++)
+            {
+                for (int y = 0; y < _nextTetromino.Height; y++)
+                {
+                    Sprite blockSprite = _blockSprites[_nextTetromino.Blocks[x, y]];
+                    blockSprite.Position = new Vector2f(GridOffsetLeft + (GridWidth * BlockWidth) + (BlockWidth * 2) + (x * BlockWidth), (BlockHeigth * 11) + (y * BlockHeigth));
 
                     _window.Draw(blockSprite);
                 }
             }
 
+            // Draw the grid
+            for (int x = 0; x < GridWidth; x++)
+            {
+                for (int y = 0; y < GridHeight; y++)
+                {
+                    Sprite blockSprite = _blockSprites[_grid[x, y]];
+                    blockSprite.Position = new Vector2f(
+                        (x * BlockWidth) + GridOffsetLeft, (y * BlockHeigth) + GridOffsetTop);
+
+                    _window.Draw(blockSprite);
+                }
+            }
+
+            // Draw the active tetromino
             for (int x = 0; x < _tetromino.Width; x++)
             {
                 for (int y = 0; y < _tetromino.Height; y++)
@@ -265,7 +423,7 @@ namespace Tetris
                     {
                         Sprite blockSprite = _blockSprites[code];
                         blockSprite.Position = new Vector2f(
-                            (_tetromino.TopLeft.X + x) * BlockWidth, (_tetromino.TopLeft.Y + y) * BlockHeigth);
+                            ((_tetromino.TopLeft.X + x) * BlockWidth) + GridOffsetLeft, ((_tetromino.TopLeft.Y + y) * BlockHeigth) + GridOffsetTop);
 
                         _window.Draw(blockSprite);
                     }
