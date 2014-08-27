@@ -349,17 +349,17 @@ namespace Tetris
                 _window.Draw(brickSprite);
             }
 
-            // Draw the score
-            var scoreNumberPosition = new Vector2f(GridOffsetLeft + (GridWidth * BlockWidth) + (BlockWidth * 2), BlockHeigth * 2);
-            DrawNumber(_score, scoreNumberPosition);
+            // Draw the controls at the right side of the screen
+            var controlPosition = new Vector2f(GridOffsetLeft + (GridWidth * BlockWidth) + (BlockWidth * 2), 0);
 
-            // Draw the level
-            var levelNumberPosition = new Vector2f(GridOffsetLeft + (GridWidth * BlockWidth) + (BlockWidth * 2), BlockHeigth * 5);
-            DrawNumber(_level, levelNumberPosition);
+            DrawText("SCORE", controlPosition + new Vector2f(0, BlockHeigth * 1));
+            DrawNumber(_score, controlPosition + new Vector2f(0, BlockHeigth * 2));
 
-            // Draw the line counter
-            var lineNumberPosition = new Vector2f(GridOffsetLeft + (GridWidth * BlockWidth) + (BlockWidth * 2), BlockHeigth * 8);
-            DrawNumber(_lines, lineNumberPosition);
+            DrawText("LEVEL", controlPosition + new Vector2f(0, BlockHeigth * 4));
+            DrawNumber(_level, controlPosition + new Vector2f(0, BlockHeigth * 5));
+
+            DrawText("LINES", controlPosition + new Vector2f(0, BlockHeigth * 7));
+            DrawNumber(_lines, controlPosition + new Vector2f(0, BlockHeigth * 8));
 
             // Draw the next tetromino
             for (int x = 0; x < _nextTetromino.Width; x++)
@@ -367,7 +367,7 @@ namespace Tetris
                 for (int y = 0; y < _nextTetromino.Height; y++)
                 {
                     Sprite blockSprite = _blockSprites[_nextTetromino.Blocks[x, y]];
-                    blockSprite.Position = new Vector2f(GridOffsetLeft + (GridWidth * BlockWidth) + (BlockWidth * 2) + (x * BlockWidth), (BlockHeigth * 11) + (y * BlockHeigth));
+                    blockSprite.Position = controlPosition + new Vector2f((BlockWidth * 1) + (x * BlockWidth), (BlockHeigth * 11) + (y * BlockHeigth));
 
                     _window.Draw(blockSprite);
                 }
@@ -406,14 +406,26 @@ namespace Tetris
             _window.Display();
         }
 
-        private void DrawNumber(int num, Vector2f position)
+        private void DrawNumber(int number, Vector2f position)
         {
-            foreach (char scoreChar in num.ToString(CultureInfo.InvariantCulture))
+            foreach (char ch in number.ToString(CultureInfo.InvariantCulture))
             {
-                int code = int.Parse(scoreChar.ToString(CultureInfo.InvariantCulture));
+                int code = int.Parse(ch.ToString(CultureInfo.InvariantCulture));
                 Sprite numberSprite = _numberSprites[code];
                 numberSprite.Position = position;
                 _window.Draw(numberSprite);
+
+                position += new Vector2f(BlockWidth, 0);
+            }
+        }
+
+        private void DrawText(string text, Vector2f position)
+        {
+            foreach (char ch in text)
+            {
+                Sprite letterSprite = _letterSprites[ch];
+                letterSprite.Position = position;
+                _window.Draw(letterSprite);
 
                 position += new Vector2f(BlockWidth, 0);
             }
