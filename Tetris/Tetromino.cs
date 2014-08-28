@@ -25,17 +25,6 @@ namespace Tetris
                         new Grid<int>(new[,]
                             {
                               { 1, 1, 1, 1 }
-                            }),
-                        new Grid<int>(new[,] 
-                        {
-                            { 1 },
-                            { 1 },
-                            { 1 },
-                            { 1 }
-                        }),
-                        new Grid<int>(new[,]
-                            {
-                              { 1, 1, 1, 1 }
                             })
                     }
         };
@@ -121,21 +110,6 @@ namespace Tetris
                                 {
                                     { 4, 4 },
                                     { 4, 4 }
-                                }), 
-                            new Grid<int>(new[,]
-                                {
-                                    { 4, 4 }, 
-                                    { 4, 4 }
-                                }),
-                            new Grid<int>(new[,]
-                                {
-                                    { 4, 4 },
-                                    { 4, 4 }
-                                }), 
-                            new Grid<int>(new[,]
-                                {
-                                    { 4, 4 }, 
-                                    { 4, 4 }
                                 })
                         }
             };
@@ -149,17 +123,6 @@ namespace Tetris
             Rotations =
             new[]
                     {
-                        new Grid<int>(new[,] 
-                        {
-                            { 0, 5, 5 },
-                            { 5, 5, 0 }
-                        }),
-                        new Grid<int>(new[,]
-                            {
-                              { 5, 0 },
-                              { 5, 5 },
-                              { 0, 5 }
-                            }),
                         new Grid<int>(new[,] 
                         {
                             { 0, 5, 5 },
@@ -217,17 +180,6 @@ namespace Tetris
             Rotations =
             new[]
                     {
-                        new Grid<int>(new[,] 
-                        {
-                            { 7, 7, 0 },
-                            { 0, 7, 7 }
-                        }),
-                        new Grid<int>(new[,]
-                            {
-                              { 0, 7 },
-                              { 7, 7 },
-                              { 7, 0 }
-                            }),
                         new Grid<int>(new[,] 
                         {
                             { 7, 7, 0 },
