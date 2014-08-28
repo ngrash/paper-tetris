@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 
 using SFML.Graphics;
 using SFML.Window;
@@ -51,6 +52,9 @@ namespace Tetris
             _window.KeyPressed += WindowOnKeyPressed;
 
             _window.SetFramerateLimit(60);
+
+            var icon = new Image("Assets/Icon.png");
+            _window.SetIcon(icon.Size.X, icon.Size.Y, icon.Pixels);
 
             _grid = new Grid<int>(GridWidth, GridHeight);
 
