@@ -29,7 +29,7 @@ namespace Tetris
         private readonly Sprite[] _blockSprites;
         private readonly Sprite[] _layoutSprites;
         private readonly Sprite[] _numberSprites;
-        private readonly Dictionary<char,Sprite> _letterSprites;
+        private readonly Dictionary<char, Sprite> _letterSprites;
 
         private Tetromino _tetromino;
         private Tetromino _nextTetromino;
