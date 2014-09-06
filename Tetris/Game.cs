@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 
 using SFML.Graphics;
 using SFML.Window;
@@ -37,8 +36,10 @@ namespace Tetris
         private int _level;
         private int _score;
         private int _lines;
+        private int _linesRequiredForNextLevel = 10;
 
         private float _secondsSinceMoveDown;
+        private float _secondsPerMoveDown = 1;
 
         private bool _isMovingLeft;
         private bool _isMovingRight;
@@ -179,9 +180,9 @@ namespace Tetris
 
             // Handle falling down
             _secondsSinceMoveDown += secondsElapsed;
-            if (_secondsSinceMoveDown >= 0.5f)
+            if (_secondsSinceMoveDown >= _secondsPerMoveDown)
             {
-                _secondsSinceMoveDown -= 0.5f;
+                _secondsSinceMoveDown -= _secondsPerMoveDown;
 
                 _tetromino.PotentialTopLeft = _tetromino.TopLeft + new Vector2i(0, 1);
             }
@@ -290,6 +291,16 @@ namespace Tetris
                 {
                     _lines += completedRowCount;
 
+                    // Level progression
+                    if (_lines >= _linesRequiredForNextLevel)
+                    {
+                        _level++;
+                        _linesRequiredForNextLevel = _lines + (int)(_linesRequiredForNextLevel * (1 / 3f));
+                        _secondsPerMoveDown = _secondsPerMoveDown - (_secondsPerMoveDown * (1 / 10f));
+
+                        Console.WriteLine("Lines required: {0}, Fall speed: {1}", _linesRequiredForNextLevel, _secondsPerMoveDown);
+                    }
+
                     // Calculate score
                     int pointFactor;
                     switch (completedRowCount)
@@ -311,9 +322,6 @@ namespace Tetris
                     }
 
                     _score += pointFactor * (_level + 1);
-
-                    // Check level progression
-                    
                 }
 
                 _tetromino = _nextTetromino;
